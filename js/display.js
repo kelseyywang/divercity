@@ -14,7 +14,7 @@ window.onload = function() {
     if (newArr[0].toLowerCase().includes(locationName.toLowerCase())) {
       document.getElementById(`metric1`).innerHTML = `${newArr[3]}%`;
       document.getElementById(`metric2`).innerHTML = `${newArr[1]}%`;
-      document.getElementById(`metric3`).innerHTML = `$${newArr[2]}0`;
+      document.getElementById(`metric3`).innerHTML = `$${newArr[2]}`;
       found = true;
       break;
     }
