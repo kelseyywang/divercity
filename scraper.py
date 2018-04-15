@@ -32,9 +32,14 @@ for row in table.find_all('tr'):
 
 data = data[2:]
 
-################################
-# get census data on each city #
-################################
+# turn percent to float
+for d in data:
+	val = d[1][0:-1]
+	d[1] = float(val)
+
+###########################################
+# get educational attainment on each city #
+###########################################
 page = "https://en.wikipedia.org/wiki/List_of_U.S._states_by_educational_attainment"
 
 # query the website and return the html to the variable ‘page’
@@ -129,8 +134,7 @@ states = {
 for node in data:
 	city = node[0]
 	state = states[city[-2:]]
-	node.append(edu[state])
-
+	node.append(float(edu[state][0:-1]))
 
 ########################
 # get household income #
@@ -169,9 +173,7 @@ income["District of Columbia"] = "$75,628"
 for node in data:
 	city = node[0]
 	state = states[city[-2:]]
-	node.append(income[state])
+	val = income[state].replace(",","")[1:]
+	node.append(float(val))
 
-print(data)
-
-
-
+return data
