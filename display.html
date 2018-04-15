@@ -4,6 +4,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Divercity</title>
     <link rel="stylesheet" href="styles/style.css"/>
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyB0QGuHiheqbaQg11F_GWZ6QeuPTBYQab0",
+        authDomain: "divercity-28ae6.firebaseapp.com",
+        databaseURL: "https://divercity-28ae6.firebaseio.com",
+        projectId: "divercity-28ae6",
+        storageBucket: "",
+        messagingSenderId: "930761009402"
+      };
+      firebase.initializeApp(config);
+    </script>
     <script src="./js/display.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Quicksand|Puritan|Lato:300" rel="stylesheet">
     <meta name="theme-color" content="#ffffff">
@@ -39,6 +52,65 @@
         </div>
       </div>
       <div class="display-right">
+        <div class="right-title">
+          How would you define your community?
+        </div>
+        <div class="right-comment" id="c0">
+          <div class="right-poster" id="p0">
+            Andy
+          </div>
+          <div class="right-text" id="t0">
+            I think what makes my city unique is that we have a lot of caring people who help each other out no matter what.
+          </div>
+        </div>
+          <div class="right-comment" id="c1">
+            <div class="right-poster" id="p1">
+              Beth
+            </div>
+            <div class="right-text" id="t1">
+              I think what makes my city unique is that we have a lot of caring people who help each other out no matter what.
+            </div>
+          </div>
+          <div class="right-comment" id="c2">
+            <div class="right-poster" id="p2">
+              Carl
+            </div>
+            <div class="right-text" id="t2">
+              I think what makes my city unique is that we have a lot of caring people who help each other out no matter what.
+            </div>
+          </div>
+          <div class="right-comment" id="c3">
+            <div class="right-poster" id="p3">
+              David
+            </div>
+            <div class="right-text" id="t3">
+              I think what makes my city unique is that we have a lot of caring people who help each other out no matter what.
+            </div>
+          </div>
+          <div class="right-comment" id="c4">
+            <div class="right-poster" id="p4">
+              Emma
+            </div>
+            <div class="right-text" id="t4">
+              I think what makes my city unique is that we have a lot of caring people who help each other out no matter what.
+            </div>
+          </div>
+          <div class="right-comment" id="c5">
+            <div class="right-poster" id="p5">
+              Fiona
+            </div>
+            <div class="right-text" id="t5">
+              I think what makes my city unique is that we have a lot of caring people who help each other out no matter what.
+            </div>
+          </div>
+          <div class="contribute-desc">
+            Contribute to help us and others understand your community:
+          </div>
+          <input type="text" placeholder="Your Name" class="display-input" id="name-field"></input>            
+          <textarea type="text" placeholder="What makes your community unique?" rows="5" class="display-input" id="comment-field"></textarea>
+          <input type="text" placeholder="Highest Education Level" class="display-input" id="education-field"></input>            
+          <input type="text" placeholder="Household Income" class="display-input" id="income-field"></input>            
+
         <a class="button" id="display-button">
           Contribute
         </a>
