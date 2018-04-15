@@ -9,7 +9,7 @@ import torchvision.transforms as transforms
 from torch.autograd import Variable
 
 data = get_data()
-batch_size = 8
+batch_size = 1
 
 # extract features
 features = np.zeros(shape=(len(data),2))
@@ -63,22 +63,23 @@ model = LogisticRegression(input_size, num_classes)
 # Loss and Optimizer
 # Softmax is internally computed.
 # Set parameters to be updated.
-criterion = nn.CrossEntropyLoss()  
+#criterion = nn.CrossEntropyLoss() 
+criterion = nn.NLLLoss()	 
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)  
 
 # Training the Model
 for epoch in range(num_epochs):
 	for i, (features, labels) in enumerate(train_loader):
 		features = Variable(features).float()
-		print("features: ", features)
+		#print("features: ", features)
 		labels = Variable(labels).long()
-		print("label shape", labels)		
+		#print("label shape", labels)		
 		# Forward + Backward + Optimize
 		optimizer.zero_grad()
 		outputs = model(features)
 
-		print("output shape", outputs)
-		print("label shape", labels.shape)
+		#print("output shape", outputs)
+		#print("label shape", labels.shape)
 		loss = criterion(outputs, labels)
 		loss.backward()
 		optimizer.step()
@@ -93,6 +94,8 @@ total = 0
 for features, labels in test_loader:
 	features = Variable(features).float()
 	outputs = model(features)
+	print("features", features)
+	print("outputs", outputs)
 	_, predicted = torch.max(outputs.data, 1)
 	total += labels.size(0)
 	print("PREDCITES: ", predicted, " LABELS: ", labels)
@@ -101,6 +104,21 @@ for features, labels in test_loader:
 			correct += 1
 	
 print('Accuracy of the model on the 10000 test images: %d %%' % (100 * correct / total))
+
+# input data
+# extract features
+features = np.zeros(shape=(1,2))
+features[0][0] = 51.1
+features[0][1] = 78378
+
+
+features = Variable(torch.from_numpy(features)).float()
+outputs = model(features)
+print("features", features)
+_, predicted = torch.max(outputs.data, 1)
+print("SAN FRANCISCO PREDCITES: ", predicted, " LABELS: ", labels)
+
+
 
 # Save the Model
 torch.save(model.state_dict(), 'model.pkl')
