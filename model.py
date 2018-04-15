@@ -9,7 +9,7 @@ import torchvision.transforms as transforms
 from torch.autograd import Variable
 
 data = get_data()
-batch_size = 5
+batch_size = 8
 
 # extract features
 features = np.zeros(shape=(len(data),2))
@@ -18,7 +18,7 @@ for j in range(len(data)):
 	features[j][1] = data[j][3]
 
 # extract targets
-targets = np.zeros(shape=(len(data),1))
+targets = np.zeros(shape=(len(data)))
 for j in range(len(data)):
 	targets[j] = data[j][1]
 
@@ -31,6 +31,8 @@ train_targets = targets[:split]
 test_features = features[split:]
 test_targets = targets[split:]
 
+print(test_targets)
+
 # make tensors
 train = data_utils.TensorDataset(torch.from_numpy(train_features), torch.from_numpy(train_targets))
 test = data_utils.TensorDataset(torch.from_numpy(test_features), torch.from_numpy(test_targets))
@@ -39,21 +41,22 @@ test = data_utils.TensorDataset(torch.from_numpy(test_features), torch.from_nump
 train_loader = torch.utils.data.DataLoader(dataset=train, batch_size=batch_size, shuffle=True)
 test_loader = torch.utils.data.DataLoader(dataset=test, batch_size=batch_size, shuffle=False)
 
-# Model
-class LogisticRegression(nn.Module):
-    def __init__(self, input_size, num_classes):
-        super(LogisticRegression, self).__init__()
-        self.linear = nn.Linear(input_size, num_classes)
-    
-    def forward(self, x):
-        out = self.linear(x)
-        return out
-
 # hyperparameters
-input_size = 50
+input_size = 2
 num_classes = 100
 learning_rate = 0.001
-num_epochs = 5
+num_epochs = 50
+
+
+# Model
+class LogisticRegression(nn.Module):
+	def __init__(self, input_size, num_classes):
+		super(LogisticRegression, self).__init__()
+		self.linear = nn.Linear(input_size, num_classes)
+	
+	def forward(self, x):
+		out = self.linear(x)
+		return out
 
 model = LogisticRegression(input_size, num_classes)
 
@@ -65,31 +68,38 @@ optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 
 # Training the Model
 for epoch in range(num_epochs):
-    for i, (features, labels) in enumerate(train_loader):
-        labels = Variable(labels)
-        
-        # Forward + Backward + Optimize
-        optimizer.zero_grad()
-        outputs = model(features)
-        loss = criterion(outputs, labels)
-        loss.backward()
-        optimizer.step()
-        
-        if (i+1) % 100 == 0:
-            print ('Epoch: [%d/%d], Step: [%d/%d], Loss: %.4f' 
-                   % (epoch+1, num_epochs, i+1, len(train_dataset)//batch_size, loss.data[0]))
+	for i, (features, labels) in enumerate(train_loader):
+		features = Variable(features).float()
+		print("features: ", features)
+		labels = Variable(labels).long()
+		print("label shape", labels)		
+		# Forward + Backward + Optimize
+		optimizer.zero_grad()
+		outputs = model(features)
+
+		print("output shape", outputs)
+		print("label shape", labels.shape)
+		loss = criterion(outputs, labels)
+		loss.backward()
+		optimizer.step()
+		
+		if (i+1) % 100 == 0:
+			print ('Epoch: [%d/%d], Step: [%d/%d], Loss: %.4f' 
+				   % (epoch+1, num_epochs, i+1, len(train_dataset)//batch_size, loss.data[0]))
 
 # Test the Model
 correct = 0
 total = 0
 for features, labels in test_loader:
-    outputs = model(features)
-    _, predicted = torch.max(outputs.data, 1)
-    total += labels.size(0)
-    if (predicted - labels <= 10):
-    	correct += 1
-    # correct += (predicted == labels).sum()
-    
+	features = Variable(features).float()
+	outputs = model(features)
+	_, predicted = torch.max(outputs.data, 1)
+	total += labels.size(0)
+	print("PREDCITES: ", predicted, " LABELS: ", labels)
+	for j in range(len(labels)):
+		if predicted[j] - labels[j] <= 10:
+			correct += 1
+	
 print('Accuracy of the model on the 10000 test images: %d %%' % (100 * correct / total))
 
 # Save the Model
